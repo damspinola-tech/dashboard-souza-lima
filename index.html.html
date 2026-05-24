@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard DRE e DFC - Souza Lima - Jan/2026</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+:root{--blue:#0f4c81;--blue2:#1f6b9e;--green:#b7d7a8;--bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--red:#b91c1c;--line:#e5e7eb;}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,var(--blue),#0b2f4e);color:white;padding:24px 28px 18px;position:sticky;top:0;z-index:10;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+header h1{margin:0;font-size:24px}header p{margin:6px 0 0;color:#dbeafe;font-size:14px}.wrap{padding:22px 28px;max-width:1440px;margin:auto}.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}.pill{background:white;border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:13px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:0;background:white;border:1px solid var(--line);padding:10px 14px;border-radius:10px;cursor:pointer;color:var(--text);font-weight:600}.tab.active{background:var(--blue);color:white;border-color:var(--blue)}
+.grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(5,minmax(160px,1fr));}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(15,76,129,.06)}.kpi-title{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}.kpi-val{font-size:25px;font-weight:800;margin-top:7px}.kpi-sub{font-size:12px;color:var(--muted);margin-top:5px}.positive{color:#15803d}.negative{color:var(--red)}.chart-grid{grid-template-columns:1.1fr .9fr;margin-top:16px}.chart{height:390px}.chart.small{height:330px}.section{display:none}.section.active{display:block}.two{grid-template-columns:1fr 1fr}.table-wrap{overflow:auto;max-height:560px}.data-table{width:100%;border-collapse:collapse;font-size:13px}.data-table th{background:var(--blue);color:white;position:sticky;top:0}.data-table th,.data-table td{padding:10px;border-bottom:1px solid var(--line);text-align:right}.data-table th:first-child,.data-table td:first-child{text-align:left}.group{font-weight:800;background:#eef6fc}.total{font-weight:800;background:#d9edf9}.highlight{font-weight:900;background:var(--green)}.note{font-size:12px;color:var(--muted);line-height:1.5}.footer{margin-top:20px;color:var(--muted);font-size:12px}.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.select{background:white;border:1px solid var(--line);border-radius:10px;padding:9px 10px} @media(max-width:1000px){.kpis,.chart-grid,.two{grid-template-columns:1fr}.chart{height:340px}header{position:static}}
+</style>
+</head>
+<body>
+<header><h1>Dashboard Interativa - DRE e DFC</h1><p>SOUZA LIMA RESTAURANTE LTDA (Cheiro Verde) - Competência: Janeiro/2026</p></header>
+<div class="wrap">
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab active" data-tab="visao">Visão Geral</button>
+      <button class="tab" data-tab="dre">DRE</button>
+      <button class="tab" data-tab="dfc">DFC</button>
+      <button class="tab" data-tab="detalhes">Detalhes</button>
+    </div>
+    <span class="pill">Regime: caixa</span><span class="pill">DRE v3 / DFC v2</span><span class="pill">Atualizado com PDFs anexos</span>
+  </div>
+
+  <section id="visao" class="section active">
+    <div class="grid kpis">
+      <div class="card"><div class="kpi-title">Receita Bruta</div><div class="kpi-val">R$ 300.347,86</div><div class="kpi-sub">Base Sischef</div></div>
+      <div class="card"><div class="kpi-title">Lucro Líquido</div><div class="kpi-val positive">R$ 53.239,32</div><div class="kpi-sub">Margem líquida 17,7%</div></div>
+      <div class="card"><div class="kpi-title">EBIT</div><div class="kpi-val positive">R$ 60.863,25</div><div class="kpi-sub">Margem operacional 20,3%</div></div>
+      <div class="card"><div class="kpi-title">Caixa Operacional</div><div class="kpi-val positive">R$ 335.122,94</div><div class="kpi-sub">DFC atividades operacionais</div></div>
+      <div class="card"><div class="kpi-title">Saldo Final Caixa</div><div class="kpi-val positive">R$ 26.349,53</div><div class="kpi-sub">Variação +R$ 18.586,92</div></div>
+    </div>
+    <div class="grid chart-grid">
+      <div class="card"><div id="waterfallDRE" class="chart"></div></div>
+      <div class="card"><div id="cashBridge" class="chart"></div></div>
+    </div>
+    <div class="grid two" style="margin-top:16px">
+      <div class="card"><div id="margens" class="chart small"></div></div>
+      <div class="card"><div id="despesasMix" class="chart small"></div></div>
+    </div>
+  </section>
+
+  <section id="dre" class="section">
+    <div class="grid chart-grid">
+      <div class="card"><div id="receitasPagamento" class="chart"></div></div>
+      <div class="card"><div id="dreBars" class="chart"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>DRE - demonstrativo</h3><div class="table-wrap"><table id="dreTable" class="data-table"></table></div></div>
+  </section>
+
+  <section id="dfc" class="section">
+    <div class="grid kpis">
+      <div class="card"><div class="kpi-title">Entradas totais</div><div class="kpi-val">R$ 680.085,71</div></div>
+      <div class="card"><div class="kpi-title">Saídas totais</div><div class="kpi-val negative">R$ 661.498,79</div></div>
+      <div class="card"><div class="kpi-title">Saldo inicial</div><div class="kpi-val">R$ 7.762,61</div></div>
+      <div class="card"><div class="kpi-title">Saldo final</div><div class="kpi-val positive">R$ 26.349,53</div></div>
+      <div class="card"><div class="kpi-title">Financiamento</div><div class="kpi-val negative">R$ -301.100,00</div></div>
+    </div>
+    <div class="grid chart-grid" style="margin-top:16px">
+      <div class="card"><div id="contasCash" class="chart"></div></div>
+      <div class="card"><div id="dfcFlows" class="chart"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h3>DFC - demonstrativo</h3><div class="table-wrap"><table id="dfcTable" class="data-table"></table></div></div>
+  </section>
+
+  <section id="detalhes" class="section">
+    <div class="grid two">
+      <div class="card"><h3>Principais leituras</h3><p>O resultado do mês foi positivo, com lucro líquido de R$ 53,2 mil e margem líquida de 17,7%. O fluxo operacional de caixa foi forte, mas o caixa final ficou em R$ 26,3 mil por causa das saídas de financiamento, principalmente reserva de capital e distribuição de lucros.</p><p>A estrutura de custos mais relevante na DRE é Pessoal (28,3% da receita bruta) e CMV (32,2%). No DFC, as movimentações internas quase se anulam, mas geraram efeito líquido de R$ -15,4 mil.</p></div>
+      <div class="card"><h3>Notas de conciliação</h3><p class="note">As taxas Stone/iFood aparecem na DRE como dedução da receita, mas não aparecem como saída adicional no DFC porque já estão embutidas no líquido recebido. Os caixas internos foram assumidos com saldo inicial zero e o DFC consolida Sicoob, Bradesco, Caixa Adm.Danilo e Caixa Dinheiro.</p></div>
+    </div>
+  </section>
+  <div class="footer">Dashboard gerada a partir dos anexos DRE-Jan2026-SouzaLima.pdf e DFC-Jan2026-SouzaLima(1).pdf.</div>
+</div>
+<script>
+const fmtBRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
+const dreRows = [
+['RECEITA OPERACIONAL BRUTA',300347.86,100,'highlight'],['Devoluções de Venda',-30.00,0,''],['Impostos e Tributos',-36170.94,12.0,''],['Taxas de Cartão',-6368.77,2.1,''],['RECEITA OPERACIONAL LÍQUIDA',257778.15,85.8,'total'],['Total CMV',-96654.85,32.2,''],['LUCRO BRUTO',161123.30,53.6,'total'],['Subtotal Pessoal',-85009.91,28.3,''],['Subtotal Vendas',-1541.27,0.5,''],['Subtotal Administrativas',-13708.87,4.6,''],['Total Despesas Operacionais',-100260.05,33.4,''],['EBIT',60863.25,20.3,'total'],['Total Despesas Financeiras',-7623.93,2.5,''],['LUCRO LÍQUIDO DO EXERCÍCIO',53239.32,17.7,'highlight']];
+const pagamentos = [['CAIXA (DINHEIRO)',47582.70],['CONTAS A RECEBER',1567.66],['AMEX STONE',1068.74],['ELO CRÉDITO',7423.24],['MASTER CRÉDITO',59354.13],['VISA CRÉDITO',54917.91],['IFOOD',8927.20],['ELO DÉBITO',6300.22],['ELO EROS',715.16],['EROS DÉBITO',14293.44],['MASTER DÉBITO',17227.78],['VISA DÉBITO',22833.63],['PIX',9884.40],['PIX P.O.S',4259.80],['SICOOB',43991.85]];
+const dfcRows = [['Saldo inicial de caixa',7762.61,'highlight'],['Recebimentos',576346.21,''],['Pagamentos a Fornecedores - CMV',-96394.88,''],['Pagamentos com Pessoal',-84860.16,''],['Despesas com Vendas / Logística',-1541.27,''],['Despesas Administrativas',-9937.63,''],['Impostos sobre Vendas',-36170.94,''],['Despesas Financeiras',-7623.93,''],['Pagamento Fatura Cartão + Sindicato',-4664.46,''],['Devolução de Venda',-30.00,''],['Caixa Líquido Atividades Operacionais',335122.94,'total'],['Investimento',0,''],['Financiamento',-301100.00,'total'],['Movimentação Interna',-15436.02,''],['Outras Entradas / Aportes PIX',0,''],['Variação líquida de caixa',18586.92,'highlight'],['Saldo final de caixa',26349.53,'highlight']];
+const contas = [['Sicoob 56.923-2',6805.84,523952.13,-505364.82,25393.15,18587.31],['Bradesco',956.77,2000,-3571.95,-615.18,-1571.95],['Caixa Adm.Danilo',0,76339.59,-77261.29,-921.70,-921.70],['Caixa Dinheiro',0,77793.99,-75300.73,2493.26,2493.26]];
+function makeTable(id, rows, headers=['Item','Valor (R$)','% RB']){let h='<thead><tr>'+headers.map(x=>`<th>${x}</th>`).join('')+'</tr></thead><tbody>'; rows.forEach(r=>{h+=`<tr class="${r[3]||r[2]||''}"><td>${r[0]}</td><td>${fmtBRL(r[1])}</td>`+(headers.length>2?`<td>${typeof r[2]==='number'?r[2].toFixed(1)+'%':''}</td>`:'')+`</tr>`}); document.getElementById(id).innerHTML=h+'</tbody>'}
+makeTable('dreTable',dreRows); makeTable('dfcTable',dfcRows.map(r=>[r[0],r[1],r[2]]),['Item','Valor (R$)']);
+const layoutBase = {margin:{t:50,l:60,r:25,b:60},paper_bgcolor:'white',plot_bgcolor:'white',font:{family:'Inter, Segoe UI, Arial'},hoverlabel:{bgcolor:'white'},xaxis:{gridcolor:'#eef2f7'},yaxis:{gridcolor:'#eef2f7',tickprefix:'R$ '}};
+Plotly.newPlot('waterfallDRE',[{type:'waterfall',orientation:'v',measure:['absolute','relative','relative','relative','total','relative','total'],x:['Receita Bruta','Deduções','CMV','Despesas Op.','EBIT','Desp. Financeiras','Lucro Líquido'],y:[300347.86,-42569.71,-96654.85,-100260.05,0,-7623.93,0],connector:{line:{color:'#94a3b8'}}}],{...layoutBase,title:'Ponte de Resultado - DRE'}, {responsive:true});
+Plotly.newPlot('cashBridge',[{type:'waterfall',measure:['absolute','relative','relative','relative','total'],x:['Saldo Inicial','Operacional','Financiamento','Mov. Interna','Saldo Final'],y:[7762.61,335122.94,-301100,-15436.02,0],connector:{line:{color:'#94a3b8'}}}],{...layoutBase,title:'Ponte de Caixa - DFC'}, {responsive:true});
+Plotly.newPlot('margens',[{type:'bar',x:['Margem Bruta','Margem EBIT','Margem Líquida','CMV % Receita','Pessoal % Receita'],y:[62.5,20.3,17.7,32.2,28.3],text:['62,5%','20,3%','17,7%','32,2%','28,3%'],textposition:'auto'}],{...layoutBase,title:'Indicadores de Performance',yaxis:{ticksuffix:'%',gridcolor:'#eef2f7'}},{responsive:true});
+Plotly.newPlot('despesasMix',[{type:'pie',labels:['CMV','Pessoal','Administrativas','Vendas/Logística','Financeiras','Impostos/Taxas/Devolução'],values:[96654.85,85009.91,13708.87,1541.27,7623.93,42569.71],hole:.45}],{...layoutBase,title:'Mix de Saídas / Deduções na DRE',showlegend:true},{responsive:true});
+Plotly.newPlot('receitasPagamento',[{type:'bar',orientation:'h',y:pagamentos.map(d=>d[0]).reverse(),x:pagamentos.map(d=>d[1]).reverse(),hovertemplate:'%{y}<br>%{x:,.2f}<extra></extra>'}],{...layoutBase,title:'Receita Bruta por Forma de Pagamento',height:480},{responsive:true});
+Plotly.newPlot('dreBars',[{type:'bar',x:dreRows.filter(r=>['Total CMV','Subtotal Pessoal','Subtotal Vendas','Subtotal Administrativas','Total Despesas Financeiras'].includes(r[0])).map(r=>r[0]),y:dreRows.filter(r=>['Total CMV','Subtotal Pessoal','Subtotal Vendas','Subtotal Administrativas','Total Despesas Financeiras'].includes(r[0])).map(r=>Math.abs(r[1])),text:dreRows.filter(r=>['Total CMV','Subtotal Pessoal','Subtotal Vendas','Subtotal Administrativas','Total Despesas Financeiras'].includes(r[0])).map(r=>fmtBRL(Math.abs(r[1]))),textposition:'auto'}],{...layoutBase,title:'Principais Custos e Despesas'},{responsive:true});
+Plotly.newPlot('contasCash',[{type:'bar',x:contas.map(c=>c[0]),y:contas.map(c=>c[4]),name:'Saldo final'},{type:'bar',x:contas.map(c=>c[0]),y:contas.map(c=>c[5]),name:'Variação'}],{...layoutBase,title:'Saldos por Conta',barmode:'group'},{responsive:true});
+Plotly.newPlot('dfcFlows',[{type:'bar',x:['Entradas','Saídas','Operacional','Financiamento','Mov. Interna'],y:[680085.71,-661498.79,335122.94,-301100,-15436.02],text:['R$ 680.085,71','R$ -661.498,79','R$ 335.122,94','R$ -301.100,00','R$ -15.436,02'],textposition:'auto'}],{...layoutBase,title:'Resumo do Fluxo de Caixa'},{responsive:true});
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tab,.section').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById(btn.dataset.tab).classList.add('active');setTimeout(()=>window.dispatchEvent(new Event('resize')),100)}));
+</script>
+</body>
+</html>
